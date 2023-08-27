@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <title>Calculator</title>
+</head>
+<body class="flex flex-col justify-center items-center bg-gradient-to-r from-pink-500 to-red-700">
+    <div class="m-8 font-bold text-4xl">Calculator by Ramanjot Singh</div>
+    <div class="calculator bg-white rounded-lg shadow-md p-8 text-center m-2">
+        <input type="text" id="display" class="w-full bg-gray-200 text-2xl p-2 mb-4 rounded" disabled>
+        <div class="grid grid-cols-4 gap-4">
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('7')">7</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('8')">8</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('9')">9</button>
+            <button class="operator bg-yellow-600 hover:bg-yellow-700 text-xl py-4 rounded" onclick="appendOperator('+')">+</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('4')">4</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('5')">5</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('6')">6</button>
+            <button class="operator bg-yellow-600 hover:bg-yellow-700 text-xl py-4 rounded" onclick="appendOperator('-')">-</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('1')">1</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('2')">2</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('3')">3</button>
+            <button class="operator bg-yellow-600 hover:bg-yellow-700 text-xl py-4 rounded" onclick="appendOperator('*')">*</button>
+            <button class="bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="backspace()">&#9003;</button>
+            <button class="number bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendNumber('0')">0</button>
+            <button class="bg-gray-400 hover:bg-gray-500 text-xl py-4 rounded" onclick="appendDecimal()">.</button>
+            <button class="operator bg-yellow-600 hover:bg-yellow-700 text-xl py-4 rounded" onclick="appendOperator('/')">/</button>
+            <button id="clear" class="bg-red-500 hover:bg-red-600 text-white text-xl py-4 rounded" onclick="clearDisplay()">C</button>
+            <button id="equal" class="bg-blue-500 hover:bg-blue-600 text-white text-xl py-4 rounded col-span-2" onclick="calculate()">=</button>
+            <button class="operator bg-yellow-600 hover:bg-yellow-700 text-xl py-4 rounded" onclick="appendOperator('^')">^</button>
+        </div>
+    </div>
+    <script>
+        let displayValue = '';
+
+        function appendNumber(number) {
+            displayValue += number;
+            updateDisplay();
+        }
+
+        function appendOperator(operator) {
+            let opr = displayValue[displayValue.length-1];
+            if(opr === "+" || opr === "-" || opr === "*" || opr === "/" || opr === "^"){
+                return;
+            }
+            displayValue += operator;
+            updateDisplay();
+        }
+
+        function appendDecimal() {
+            const lastNumber = getLastNumber();
+            if (!lastNumber.includes('.')) {
+                displayValue += '.';
+                updateDisplay();
+            }
+        }
+
+        function getLastNumber() {
+            const numbers = displayValue.split(/[\+\-\*\/\^]/);
+            return numbers[numbers.length - 1];
+        }
+
+        function calculate() {
+            try {
+                if (displayValue.includes('^')) {
+                    const [base, exponent] = displayValue.split('^');
+                    const result = Math.pow(parseFloat(base), parseFloat(exponent));
+                    displayValue = result.toString();
+                } else {
+                    displayValue = eval(displayValue).toString();
+                }
+                updateDisplay();
+            } catch (error) {
+                displayValue = 'Error';
+                updateDisplay();
+            }
+        }
+
+        function clearDisplay() {
+            displayValue = '';
+            updateDisplay();
+        }
+
+        function backspace() {
+            displayValue = displayValue.slice(0, -1);
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').value = displayValue;
+        }
+    </script>
+</body>
+</html>
